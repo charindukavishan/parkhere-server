@@ -1,4 +1,4 @@
-// require('./config/config');
+require('./config/config');
 // require('./models/db');
 // require('./config/passportConfig');
 
@@ -8,7 +8,7 @@ const cors = require('cors');
 const passport = require('passport');
 const PORT = process.env.PORT || 5000;
 
-// const rtsIndex = require('./routes/index.router');
+const rtsIndex = require('./routes/index.router');
 
 var app = express();
 
@@ -19,7 +19,7 @@ app.use(passport.initialize());
 app.get('/', (req, res) => {
     res.send("hello");
 });
-// app.use('/api', rtsIndex);
+app.use('/api', rtsIndex);
 
 // error handler
 app.use((err, req, res, next) => {
