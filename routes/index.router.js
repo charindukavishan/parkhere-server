@@ -10,6 +10,7 @@ router.post('/authenticate', ctrlUser.authenticate);
 router.get('/userProfile',jwtHelper.verifyJwtToken, ctrlUser.userProfile);
 router.get('/getname/:email', ctrlUser.getname);
 router.put('/rstpw',ctrlUser.puttoken);
+router.get('/test',ctrlUser.test);
 module.exports = router;
 
 

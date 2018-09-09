@@ -62,6 +62,17 @@ module.exports.authenticate = (req, res, next) => {
     })(req, res);
 }
 
+module.exports.test = (req,res, next)=>{
+    User.findOne({ _id: "5b938499608bc60004046f2d"},
+        (err, user) => {
+            if (!user)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else{console.log('Im in backend');
+                return res.status(200).json({ status: true, user});}
+        }
+    );
+}
+
 module.exports.userProfile = (req, res, next) =>{
     User.findOne({ _id: req._id },
         (err, user) => {
