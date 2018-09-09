@@ -17,7 +17,9 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(passport.initialize());
 app.get('/', (req, res) => {
-    res.send("hello welcome");
+
+    res.send("hello and hi");
+
 });
 app.use('/api', rtsIndex);
 
