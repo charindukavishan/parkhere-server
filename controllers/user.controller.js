@@ -54,11 +54,11 @@ module.exports.authenticate = (req, res, next) => {
     // call for passport authentication
     passport.authenticate('local', (err, user, info) => {       
         // error from passport middleware
-        if (err) return res.status(400).json(err);
+        if (err) return res.status(400).json({"status":"error","error":err});
         // registered user
-        else if (user) return res.status(200).json({ "token": user.generateJwt() });
+        else if (user) return res.status(200).json({ "status":"success","token": user.body });
         // unknown user or wrong password
-        else return res.status(404).json(info);
+        else return res.status(404).json({"status":"error","error":info});
     })(req, res);
 }
 
