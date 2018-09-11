@@ -63,7 +63,7 @@ module.exports.authenticate = (req, res, next) => {
             "email":user.email
         }});
         // unknown user or wrong password
-        else return res.status(404).json({"status":"error","error":info});
+        else return res.status(200).json({"status":"error","error":info});
     })(req, res);
 }
 
