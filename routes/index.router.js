@@ -8,6 +8,7 @@ const jwtHelper = require('../config/jwtHelper');
 router.post('/register', ctrlUser.register);
 router.post('/authenticate', ctrlUser.authenticate);
 router.post('/updateUser', ctrlUser.updateUser);
+router.post('/getUser', ctrlUser.getUser);
 router.post('/addUserVehicle', ctrlUser.addUserVehicle);
 router.post('/updateUserVehicle', ctrlUser.updateUserVehicle);
 router.post('/deleteUserVehicle', ctrlUser.deleteUserVehicle);

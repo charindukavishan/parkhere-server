@@ -77,7 +77,9 @@ module.exports.authenticate = (req, res, next) => {
             "fname": user.firstName,
             "lname":user.lastName,
             "uid":user._id,
-            "email":user.email
+            "email":user.email,
+            "registered":user.verified,
+            "regcode":user.regcode
         }});
         // unknown user or wrong password
         else return res.status(200).json({"status":"error","error":info});//test
@@ -193,11 +195,23 @@ module.exports.puttoken=(req,res)=>{
 
 }
 
+module.exports.getUser=(req,res)=>{
+    User.findOne({email:req.body.email}).select().exec((err,user)=>{console.log(user)
+        if(err) throw err;
+        if(!user){
+            res.json({sucsess:false,message:'user was not found'})
+        }else{
+            res.json({sucsess:true,user:user});    
+        }
+    });
+}
+
 module.exports.updateUser=(req,res)=>{
     var obj = {}
     if(req.body.nic) obj.nic=req.body.nic
     if(req.body.dob) obj.dob=req.body.dob
     if(req.body.mobileNo) obj.mobileNo=req.body.mobileNo
+    if(req.body.verified) obj.verified=req.body.verified
     console.log(obj);
     User.updateOne(
         {
