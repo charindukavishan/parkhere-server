@@ -26,13 +26,19 @@ var userSchema = new mongoose.Schema({
     other : { type:  String },
     mweight : { type:  String  },
     mheight:{ type: String  },
-    vehicles: { type: String },
+    //vehicles: { type: String },
     street:{ type:  String  },
     city: { type:  String },
     state: { type:  String  },
     zip:{ type:  String },
+    nic:{ type: String },
+    vehicles:{type:Array,default:[]},
     saltSecret:{type: String},
-    temptoken:{type : String}
+    dob:{type:Date},
+    mobileNo:{type:String},
+    temptoken:{type : String},
+    verified:{type:Boolean},
+    regcode:{type:String}
 });
 
 // Custom validation for email

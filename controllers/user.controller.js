@@ -8,8 +8,8 @@ const User = mongoose.model('User');
 var transporter = email.createTransport({
     service: 'gmail',
     auth: {
-      user: 'charindukavishan@gmail.com',
-      pass: 'asformyol0757073683'
+      user: 'uniloginmy@gmail.com',
+      pass: 'Wageesha@uniloginmy'
     }
   });
 module.exports.register = (req, res, next) => {
@@ -35,11 +35,28 @@ module.exports.register = (req, res, next) => {
         city:req.body.city,
         state:req.body.state,
         zip:req.body.zip,
-        temptoken:req.body.temptoken
+        temptoken:req.body.temptoken,
+        regcode:req.body.regcode,
+        verified:false
         });
         user.save((err, doc) => {
-        if (!err)
+        if (!err){
             res.send(doc);
+            var email={
+                from:'uniloginmy@gmail.com',
+                to:user.email,
+                subject:user.firstName,
+                text:"Use this code to continue registration : "+user.regcode
+            };
+            transporter.sendMail(email, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                  //res.json({sucsess:true,message:'message was send to your email'})
+                }
+              });
+            }
         else {
             if (err.code == 11000)
                 res.status(422).send(['Duplicate email adrress found.']);
@@ -96,7 +113,6 @@ module.exports.getname=(req,res,next)=>{
             if(!user){ console.log('svdjsdj')
                 res.json({sucsess:false,message:'email was not found'})
             }
-    
             else{ 
                 var email={
                     from:'',
@@ -112,14 +128,34 @@ module.exports.getname=(req,res,next)=>{
                     }
                   });
                   return res.status(200).json({ status: true, user});
-            }
-        
-        
+            }  
     })
-    
-    
-    
+}
 
+module.exports.verify=(req,res)=>{
+    User.findOne({email:req.body.email}).select().exec((err,user)=>{console.log(user)
+        if(err) throw err;
+        if(!user){
+            res.json({sucsess:false,message:'user was not found'})
+        }
+        else{
+            if(user.regcode==req.body.regcode){
+                user.verified= true;
+                user.save((err)=>{
+                    if(err){
+                        res.json({sucsess:false,message:err})
+                    }
+                    else{
+                        res.json({sucsess:true})
+                    }
+                })
+            }
+            else{
+                res.json({sucsess:false,message:"Wrong code"})
+            }
+            
+        }
+    })
 }
 
 module.exports.puttoken=(req,res)=>{
@@ -154,5 +190,92 @@ module.exports.puttoken=(req,res)=>{
         }
     })
 
+
+}
+
+module.exports.updateUser=(req,res)=>{
+    var obj = {}
+    if(req.body.nic) obj.nic=req.body.nic
+    if(req.body.dob) obj.dob=req.body.dob
+    if(req.body.mobileNo) obj.mobileNo=req.body.mobileNo
+    console.log(obj);
+    User.updateOne(
+        {
+            email:req.body.email
+        },
+        {
+            $set:obj
+        },
+        function(err){
+            if(err){
+                res.json({sucsess:false,message:err,email:req.body.email})
+            }else{
+                res.json({success:true,email:req.body.email})
+            }
+        }
+    )
+}
+
+module.exports.addUserVehicle=(req,res)=>{
+    //console.log(obj);
+    User.updateOne(
+        {
+            email:req.body.email
+        },
+        {
+            $push:{
+                'vehicles':req.body.vehicle
+            }
+        },
+        function(err){
+            if(err){
+                res.json({sucsess:false,message:err,email:req.body.email})
+            }else{
+                res.json({success:true,email:req.body.email})
+            }
+        }
+    )
+}
+
+module.exports.updateUserVehicle=(req,res)=>{
+    //console.log(obj);
+    User.updateOne(
+        {
+            email:req.body.email,
+            'vehicles.number':req.body.number
+        },
+        {
+            $set:{
+                'vehicles.$.name':req.body.name
+            }
+        },
+        function(err){
+            if(err){
+                res.json({sucsess:false,message:err,email:req.body.email})
+            }else{
+                res.json({success:true,email:req.body.email})
+            }
+        }
+    )
+
+}
+
+module.exports.deleteUserVehicle=(req,res)=>{
+    //console.log(obj);
+    User.updateOne(
+        {
+            email:req.body.email
+        },
+        {
+            $pull:{'vehicles':{'number':req.body.number}}
+        },
+        function(err){
+            if(err){
+                res.json({sucsess:false,message:err,email:req.body.email})
+            }else{
+                res.json({success:true,email:req.body.email})
+            }
+        }
+    )
 
 }
