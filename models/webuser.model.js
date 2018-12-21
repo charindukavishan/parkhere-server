@@ -42,7 +42,7 @@ role:{type:String},
     isactivate:{type : String},
     lat:{type:String},
     lng:{type:String},
-    saltSecret : {type:String},
+    saltSecret : {type:String}
 });
 
 // Custom validation for email

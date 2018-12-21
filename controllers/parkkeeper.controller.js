@@ -51,6 +51,7 @@ const Park = mongoose.model('park');
 module.exports.pkregister =  (req,res,next)=>{
 
    let newUser =new Park(req.body);
+   newUser.ownerid=req.params.id;
    let slot={
     "isBook":false,
     "slotNumber":0,
@@ -152,6 +153,26 @@ module.exports.pkregister =  (req,res,next)=>{
 
 };
 
+module.exports.authenticate = (req, res, next) => {console.log('sjdvh')
+    // call for passport authentication
+    passport.authenticate('keeper', (err, user, info) => {       
+        // error from passport middleware
+        if (err) return res.status(400).json(err);
+        // registered user
+        else if (user) {
+            console.log(user)
+            return res.status(200).json({ "token": jwt.sign({ _id:user._id,role:user.role,isactivate:user.isactivate
+            },
+            process.env.JWT_SECRET,
+        {
+            expiresIn: process.env.JWT_EXP
+        }) });}
+        // unknown user or wrong password
+        else return res.status(404).json(info);
+    })(req, res);
+}
+
+
 module.exports.keeperProfile = (req, res, next) =>{console.log('aghkbadhfb');
     Park.findOne({ _id: req._id },
         (err, user) => {
@@ -165,7 +186,7 @@ module.exports.keeperProfile = (req, res, next) =>{console.log('aghkbadhfb');
 }
 
 module.exports.getkeepers = (req, res, next) => {
-   User.find({ ownerid :req.params.id },
+   Park.find({ ownerid :req.params.id },
         (err, user) => {console.log(user)
             if (!user){
                 return res.status(404).json({ status: false, message: 'User record not found.' });
@@ -178,7 +199,7 @@ module.exports.getkeepers = (req, res, next) => {
 
 
 module.exports.setstate=(req,res)=>{
-    User.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(user)
+    Park.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(user)
         if(err) throw err;
         if(!user){
             res.json({sucsess:false,message:'user was not found'})
@@ -193,13 +214,13 @@ module.exports.setstate=(req,res)=>{
                 else{
                     res.json({sucsess:true,message:user})
                 }
-            })
+            }) 
         }
     })
 }
 
 module.exports.getnewkeepers=(req,res)=>{
-    User.find({isactivate:"no"}).select().exec((err,user)=>{console.log(user)
+   Park.find({isactivate:"no"}).select().exec((err,user)=>{console.log(user)
         if(err) throw err;
         if(!user){
             res.json({sucsess:false,message:'user was not found'})
@@ -212,7 +233,7 @@ module.exports.getnewkeepers=(req,res)=>{
 }
 
 module.exports.acceptpark=(req,res)=>{
-    User.findOne({_id:req.params.id}).select().exec((err,user)=>{
+    Park.findOne({_id:req.params.id}).select().exec((err,user)=>{
         
         if(err) throw err;
        

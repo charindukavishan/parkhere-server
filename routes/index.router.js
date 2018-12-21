@@ -44,6 +44,7 @@ router.get('/web/getPosts',ctrlUser.getPosts)
 router.put('/web/editpro/:id',ctrlUser.editpro);
  
 router.post('/web/regkeeper/:id',keeper.pkregister);
+router.post('/web/keeper/authenticate', keeper.authenticate);
 router.get('/web/keeperProfile',jwtHelper.verifyJwtToken, keeper.keeperProfile);
 router.get('/web/getkeepers/:id', keeper.getkeepers);
 router.get('/web/setstate/:id/:state',keeper.setstate);

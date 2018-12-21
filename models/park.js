@@ -118,7 +118,20 @@ const UserSchema = mongoose.Schema({
 role:{
     type:String,
     default:"keeper"
-}
+},
+isactivate:{
+    type:String,
+    default:"no"
+},
+state:{
+    type:String,
+    default:"close"
+},
+ownerid:{
+    type:String
+},
+lat:{type:Number},
+lng:{type:Number}
     
 
 });
