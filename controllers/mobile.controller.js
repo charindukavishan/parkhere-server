@@ -37,7 +37,8 @@ module.exports.register = (req, res, next) => {
         zip:req.body.zip,
         temptoken:req.body.temptoken,
         regcode:req.body.regcode,
-        verified:false
+        verified:false,
+        role:"driver"
         });
         user.save((err, doc) => {
         if (!err){
@@ -236,7 +237,7 @@ module.exports.addUserVehicle=(req,res)=>{
         {
             email:req.body.email
         },
-        {
+        { 
             $push:{
                 'vehicles':req.body.vehicle
             }

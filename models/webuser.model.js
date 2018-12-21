@@ -16,6 +16,9 @@ var userSchema = new mongoose.Schema({
         minlength: [4, 'Password must be atleast 4 character long']
     },
 
+    address:{type:String},
+tel:{type:String},
+role:{type:String},
     freeland : { type:  String  },
     sheltered: { type:  String  },
     car: { type:  String  },
@@ -26,20 +29,20 @@ var userSchema = new mongoose.Schema({
     other : { type:  String },
     mweight : { type:  String  },
     mheight:{ type: String  },
-    //vehicles: { type: String },
+    vehicles: { type: String },
     street:{ type:  String  },
     city: { type:  String },
-    state: { type:  String  },
+    country: { type:  String  },
     zip:{ type:  String },
-    nic:{ type: String },
-    vehicles:{type:Array,default:[]},
     saltSecret:{type: String},
-    dob:{type:Date},
-    mobileNo:{type:String},
     temptoken:{type : String},
-    verified:{type:Boolean},
-    regcode:{type:String},
-    role:{type:String}
+    name:{type : String},
+    ownerid:{type : String},
+    state:{type : String},
+    isactivate:{type : String},
+    lat:{type:String},
+    lng:{type:String},
+    saltSecret : {type:String},
 });
 
 // Custom validation for email
@@ -49,15 +52,17 @@ userSchema.path('email').validate((val) => {
 }, 'Invalid e-mail.');
 
 // Events
-userSchema.pre('save', function (next) {
-    bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(this.password, salt, (err, hash) => {
-            this.password = hash;
-            this.saltSecret = salt;
-            next();
-        });
-    });
-});
+// userSchema.pre('save', function (next) {
+//     bcrypt.genSalt(10, (err, salt) => {
+//         bcrypt.hash(this.password, salt, (err, hash) => {
+//             this.password = hash;
+//             this.saltSecret = salt;
+//             next();
+//         });
+//     });
+// });
+
+
 
 
 // Methods
@@ -75,4 +80,4 @@ userSchema.methods.generateJwt = function () {
 
 
 
-mongoose.model('User', userSchema);
+mongoose.model('webUser', userSchema);
