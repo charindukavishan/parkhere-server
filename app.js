@@ -6,7 +6,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
-const port=process.env.PORT || 3000
+const PORT = process.env.PORT || 5000;
 
 const rtsIndex = require('./routes/index.router');
 
