@@ -42,6 +42,7 @@ router.put('/web/savepassword',ctrlUser.savepassword);
 router.post('/web/newPost', ctrlUser.newPost);
 router.get('/web/getPosts',ctrlUser.getPosts)
 router.put('/web/editpro/:id',ctrlUser.editpro);
+router.post('/updateprofilepic/:id',ctrlUser.editPic)
  
 router.post('/web/regkeeper/:id',keeper.pkregister);
 router.post('/web/keeper/authenticate', keeper.authenticate);

@@ -133,7 +133,25 @@ module.exports.getowner = (req, res, next) =>{console.log('aghkbadhfb');
         }
     );
 }
-
+module.exports.editPic=(req,res)=>{
+    User.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(req.body);
+        if(err) throw err;
+        if(!user){
+            res.json({sucsess:false,message:'user was not found'})
+        }
+        else{
+            user.proPic=req.body.PicUrl;
+            user.save((err)=>{
+                if(err){
+                    res.json({sucsess:false,message:err})
+                }
+                else{
+                    res.json({sucsess:true,message:user})
+                }
+            })
+        }
+    })
+}
 module.exports.editpro=(req,res)=>{console.log('edit')
     User.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(user)
         if(err) throw err;
