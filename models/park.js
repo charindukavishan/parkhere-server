@@ -131,7 +131,8 @@ ownerid:{
     type:String
 },
 lat:{type:Number},
-lng:{type:Number}
+lng:{type:Number},
+proPic:{type:String}
     
 
 });

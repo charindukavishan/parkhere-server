@@ -60,7 +60,8 @@ module.exports.pkregister =  (req,res,next)=>{
     "email":"",
     "parkedAt":"",
     "leavAt":"",
-    "isLeav":true
+    "isLeav":true,
+    "slotId":''
     }
     id="";
    Park.addUser(newUser, (err,user)=>{
@@ -68,6 +69,7 @@ module.exports.pkregister =  (req,res,next)=>{
        else{
        for(i=1;i<=req.body.alocatedSlots1;i++){
         slot.slotNumber=i;
+        slot.slotId=req.params.id+1+i;
      Park.updateOne(
          {
              email:user.email
@@ -84,6 +86,7 @@ module.exports.pkregister =  (req,res,next)=>{
     }
     for(i=1;i<=req.body.alocatedSlots2;i++){
         slot.slotNumber=i;
+        slot.slotId=req.params.id+2+i;
      Park.updateOne(
          {
              email:user.email
@@ -100,6 +103,7 @@ module.exports.pkregister =  (req,res,next)=>{
     }
     for(i=1;i<=req.body.alocatedSlots3;i++){
         slot.slotNumber=i;
+        slot.slotId=req.params.id+3+i;
      Park.updateOne(
          {
              email:user.email
@@ -116,6 +120,7 @@ module.exports.pkregister =  (req,res,next)=>{
     }
     for(i=1;i<=req.body.alocatedSlots4;i++){
         slot.slotNumber=i;
+        slot.slotId=req.params.id+4+i;
      Park.updateOne(
          {
              email:user.email
@@ -132,6 +137,7 @@ module.exports.pkregister =  (req,res,next)=>{
     }
     for(i=1;i<=req.body.alocatedSlots5;i++){
         slot.slotNumber=i;
+        slot.slotId=req.params.id+5+i;
      Park.updateOne(
          {
              email:user.email
@@ -196,6 +202,17 @@ module.exports.getkeepers = (req, res, next) => {
         }
     );
 }
+module.exports.getkeeperprofile = (req, res, next) => {
+    Park.findOne({ _id :req.params.id },
+         (err, user) => {console.log(user)
+             if (!user){
+                 return res.status(404).json({ status: false, message: 'User record not found.' });
+             console.log(err)}
+                 else{
+                 res.json(user);}
+         }
+     );
+ }
 
 
 module.exports.setstate=(req,res)=>{
@@ -250,4 +267,24 @@ module.exports.acceptpark=(req,res)=>{
         
     })
 
+}
+
+module.exports.editPic=(req,res)=>{
+    Park.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(req.body);
+        if(err) throw err;
+        if(!user){
+            res.json({sucsess:false,message:'user was not found'})
+        }
+        else{
+            user.proPic=req.body.PicUrl;
+            user.save((err)=>{
+                if(err){
+                    res.json({sucsess:false,message:err})
+                }
+                else{
+                    res.json({sucsess:true,message:user})
+                }
+            })
+        }
+    })
 }

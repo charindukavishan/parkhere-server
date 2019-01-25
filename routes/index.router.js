@@ -4,6 +4,8 @@ const router = express.Router();
 const ctrlMobile = require('../controllers/mobile.controller');
 
 const jwtHelper = require('../config/jwtHelper');
+
+const ctrlBook=require('../controllers/booking.controller');
 // Mobile routing >>>>>>>>>>
 
 
@@ -51,11 +53,19 @@ router.get('/web/getkeepers/:id', keeper.getkeepers);
 router.get('/web/setstate/:id/:state',keeper.setstate);
 router.get('/web/getnewkeepers',keeper.getnewkeepers);
 router.get('/web/acceptpark/:id',keeper.acceptpark)
+router.post('/updatekeeperpic/:id',keeper.editPic)
+router.get('/web/getkeeperprofile/:id', keeper.getkeeperprofile);
 
 router.get('/web/users', ctrlUser.users);
 router.get('/web/readmsg/:file',ctrlUser.readmsg);
 router.get('/web/getowners', ctrlUser.getowners);
 
+router.get('/web/bookingDetails/:slotId',ctrlBook.bookingDetails)
+router.get('/web/booking/:id',ctrlBook.booking)
+router.get('/web/bookinghistory/:id',ctrlBook.bookinhistory)
+router.post('/web/setBook',ctrlBook.setBook)
+router.get('/web/deletebook/:bookId',ctrlBook.deleteBook)
+router.post('/web/sethistory',ctrlBook.sethistory)
 // router.post('/upload/:id',filecntrl.savefile);
 // router.get('/files/:id',filecntrl.files)
 // router.get('/file/:filename',filecntrl.file)

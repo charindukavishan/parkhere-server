@@ -9,4 +9,6 @@ require('./user.model');
 require('./webuser.model');
 require('./park');
 require('./files');
+require('./booking')
+require('./history');
 // require('./adminfile');
