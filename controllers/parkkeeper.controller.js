@@ -126,8 +126,8 @@ module.exports.pkregister =  (req,res,next)=>{
              }
              id="";
 
-
-            Park.addUser(newUser, (err,user)=>{
+             
+            Park.addUser(newUser, (err,user)=>{console.log(user)
                 if(err) throw err;
                 else{
                 for(i=1;i<=req.body.alocatedSlots1;i++){

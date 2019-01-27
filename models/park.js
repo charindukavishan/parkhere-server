@@ -143,6 +143,9 @@ temptoken:{
 monthrev:{
     type:Number,
     default:0
+},
+docUrl:{
+    type:String
 }
     
 
