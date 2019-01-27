@@ -24,8 +24,8 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     password:{
-        type: String,
-        required: true
+        type: String
+        
     },
 
     mobileNum:{
@@ -132,7 +132,18 @@ ownerid:{
 },
 lat:{type:Number},
 lng:{type:Number},
-proPic:{type:String}
+proPic:{type:String},
+isReport:{
+    type:Boolean,
+    default:false
+},
+temptoken:{
+    type:String
+},
+monthrev:{
+    type:Number,
+    default:0
+}
     
 
 });
@@ -155,13 +166,15 @@ UserSchema.methods.verifyPassword = function (password) {
 
 
 module.exports.addUser = function(newUser,callback){
-    bcrypt.genSalt(10, (err,salt)=>{
-        bcrypt.hash(newUser.password, salt, (err,hash)=>{
-        if(err) throw err;
-        newUser.password = hash;console.log(newUser)
-        newUser.save(callback);
-        });
-    });
+    // bcrypt.genSalt(10, (err,salt)=>{
+    //     bcrypt.hash(newUser.password, salt, (err,hash)=>{
+    //     if(err) throw err;
+    //     newUser.password = hash;console.log(newUser)
+    //     newUser.save(callback);
+    //     });
+    // });
+
+    newUser.save(callback);
 }
 
 
@@ -171,3 +184,11 @@ module.exports.comparePassword = function(candidatePassword, hash ,callback){
         callback(null,isMatch);
     });
 }
+
+// User.methods.generateJwt = function () {
+//     return jwt.sign({ _id: this._id},
+//         process.env.JWT_SECRET,
+//     {
+//         expiresIn: process.env.JWT_EXP
+//     });
+// }

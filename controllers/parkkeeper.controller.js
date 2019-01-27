@@ -9,6 +9,14 @@ const User = mongoose.model('webUser');
 // const User=require('../models/user.model')
 const Park = mongoose.model('park');
 
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'parkheresl@gmail.com',
+      pass: 'Parkherechuru'
+    }
+  });
+
 // module.exports.pkregister = (req, res, next) => {
 //     bcrypt.genSalt(10, (err, salt) => {
 //         bcrypt.hash(req.body.password, salt, (err, hash) => {
@@ -44,120 +52,188 @@ const Park = mongoose.model('park');
 //         });
 //     });
 // }
+module.exports.puttoken=(req,res)=>{console.log('sjhdfjb')
+    Park.findOne({email:req.params.email}).select().exec((err,user)=>{console.log(user)
+        if(err) console.log(err)
+        
+        if(!user){
+            res.json({sucsess:false,message:'user was not found'})
+        }
+        else{
+            user.temptoken= jwt.sign({ _id: this._id},
+                process.env.JWT_SECRET,
+            {
+                expiresIn: process.env.JWT_EXP
+            });
+            user.save((err)=>{
+                if(err){
+                    res.json({sucsess:false,message:err})
+                }
+                else{console.log(user.temptoken);
+                    res.json({sucsess:true,message:'message was send to your email'})
+                    var email={
+                        from:'parkheresl@gmail.com',
+                        to:user.email,
+                        subject:user.firstName,
+                        text:'http://localhost:4200/newpassword/keeper/'+user.temptoken
+                    };
+                    transporter.sendMail(email, function(error, info){
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Email sent: ' + info.response);
+                          res.json({sucsess:true,message:'message was send to your email'})
+                        }
+                      });
+                }
+            })
+        }
+    })
+}
 
+module.exports.rstpw=(req,res)=>{
+    Park.findOne({ temptoken:req.params.token}).select().exec((err,user)=>{
+        if(err) throw err;
+        var token=req.params.token;
+        jwt.verify(token,process.env.JWT_SECRET,(err,decoded)=>{
+            if(err){
+                res.json({sucsess:false,message:'password link has expired'});
+            }else{
+                res.json({sucsess:true,user:user});
 
-
+            }
+        })
+    })
+}
 
 module.exports.pkregister =  (req,res,next)=>{
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+             let newUser =new Park(req.body);
+            newUser.ownerid=req.params.id;
+            newUser.password=hash
+            let slot={
+             "isBook":false,
+             "slotNumber":0,
+             "name":"",
+             "nic":"",
+             "email":"",
+             "parkedAt":"",
+             "leavAt":"",
+             "isLeav":true,
+             "slotId":'',
+             "charge":''
+             }
+             id="";
 
-   let newUser =new Park(req.body);
-   newUser.ownerid=req.params.id;
-   let slot={
-    "isBook":false,
-    "slotNumber":0,
-    "name":"",
-    "nic":"",
-    "email":"",
-    "parkedAt":"",
-    "leavAt":"",
-    "isLeav":true,
-    "slotId":''
-    }
-    id="";
-   Park.addUser(newUser, (err,user)=>{
-       if(err) throw err;
-       else{
-       for(i=1;i<=req.body.alocatedSlots1;i++){
-        slot.slotNumber=i;
-        slot.slotId=req.params.id+1+i;
-     Park.updateOne(
-         {
-             email:user.email
-         },
-         { 
-             $push:{
-                 'type1':slot
-             }
-         },
-         function(err,user){
-             
-         }
-     )
-    }
-    for(i=1;i<=req.body.alocatedSlots2;i++){
-        slot.slotNumber=i;
-        slot.slotId=req.params.id+2+i;
-     Park.updateOne(
-         {
-             email:user.email
-         },
-         { 
-             $push:{
-                 'type2':slot
-             }
-         },
-         function(err,user){
-             
-         }
-     )
-    }
-    for(i=1;i<=req.body.alocatedSlots3;i++){
-        slot.slotNumber=i;
-        slot.slotId=req.params.id+3+i;
-     Park.updateOne(
-         {
-             email:user.email
-         },
-         { 
-             $push:{
-                 'type3':slot
-             }
-         },
-         function(err,user){
-             
-         }
-     )
-    }
-    for(i=1;i<=req.body.alocatedSlots4;i++){
-        slot.slotNumber=i;
-        slot.slotId=req.params.id+4+i;
-     Park.updateOne(
-         {
-             email:user.email
-         },
-         { 
-             $push:{
-                 'type4':slot
-             }
-         },
-         function(err,user){
-             
-         }
-     )
-    }
-    for(i=1;i<=req.body.alocatedSlots5;i++){
-        slot.slotNumber=i;
-        slot.slotId=req.params.id+5+i;
-     Park.updateOne(
-         {
-             email:user.email
-         },
-         { 
-             $push:{
-                 'type5':slot
-             }
-         },
-         function(err,user){
-             
-         }
-     )
-    }
-    res.json({success: true,msg:'User registered'});
 
-}
-   });
+            Park.addUser(newUser, (err,user)=>{
+                if(err) throw err;
+                else{
+                for(i=1;i<=req.body.alocatedSlots1;i++){
+                 slot.slotNumber=i;
+                 slot.slotId=req.params.id+1+i;
+              Park.updateOne(
+                  {
+                      email:user.email
+                  },
+                  { 
+                      $push:{
+                          'type1':slot
+                      }
+                  },
+                  function(err,user){
+                      
+                  }
+              )
+             }
+             for(i=1;i<=req.body.alocatedSlots2;i++){
+                 slot.slotNumber=i;
+                 slot.slotId=req.params.id+2+i;
+              Park.updateOne(
+                  {
+                      email:user.email
+                  },
+                  { 
+                      $push:{
+                          'type2':slot
+                      }
+                  },
+                  function(err,user){
+                      
+                  }
+              )
+             }
+             for(i=1;i<=req.body.alocatedSlots3;i++){
+                 slot.slotNumber=i;
+                 slot.slotId=req.params.id+3+i;
+              Park.updateOne(
+                  {
+                      email:user.email
+                  },
+                  { 
+                      $push:{
+                          'type3':slot
+                      }
+                  },
+                  function(err,user){
+                      
+                  }
+              )
+             }
+             for(i=1;i<=req.body.alocatedSlots4;i++){
+                 slot.slotNumber=i;
+                 slot.slotId=req.params.id+4+i;
+              Park.updateOne(
+                  {
+                      email:user.email
+                  },
+                  { 
+                      $push:{
+                          'type4':slot
+                      }
+                  },
+                  function(err,user){
+                      
+                  }
+              )
+             }
+             for(i=1;i<=req.body.alocatedSlots5;i++){
+                 slot.slotNumber=i;
+                 slot.slotId=req.params.id+5+i;
+              Park.updateOne(
+                  {
+                      email:user.email
+                  },
+                  { 
+                      $push:{
+                          'type5':slot
+                      }
+                  },
+                  function(err,user){
+                      
+                  }
+              )
+             }
+             res.json({success: true,msg:'User registered'});
+         
+         }
+            });})});
+  
 
 };
+
+module.exports.editkeeper=(req,res,next)=>{
+    let newUser =new Park(req.body);
+    Park.updateOne({_id:req.params.id},
+        (err, user, info)=>{
+if(err) throw err;
+else
+res.json({sucsess:false,message:'Updated details'})
+        }
+    )
+
+}
 
 module.exports.authenticate = (req, res, next) => {console.log('sjdvh')
     // call for passport authentication
@@ -214,6 +290,29 @@ module.exports.getkeeperprofile = (req, res, next) => {
      );
  }
 
+ module.exports.allkeepers = (req, res, next) => {console.log('kshdgfj')
+    Park.find({},
+         (err, user) => {console.log(user)
+             if (!user){
+                 return res.status(404).json({ status: false, message: 'User record not found.' });
+             console.log(err)}
+                 else{
+                 res.json(user);}
+         }
+     );
+ }
+module.exports.reported=(req,res,next)=>{
+    Park.find({isReport:true},
+        (err, user) => {console.log(user)
+            if (!user){
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            console.log(err)}
+                else{
+                res.json(user);}
+        }
+    );
+}
+
 
 module.exports.setstate=(req,res)=>{
     Park.findOne({_id:req.params.id}).select().exec((err,user)=>{console.log(user)
@@ -255,6 +354,7 @@ module.exports.acceptpark=(req,res)=>{
         if(err) throw err;
        
             user.isactivate="yes";
+            user.isReport=false;
             user.save((err)=>{
                 if(err){
                     res.json({sucsess:false,message:err})
@@ -266,6 +366,16 @@ module.exports.acceptpark=(req,res)=>{
             
         
     })
+
+}
+
+module.exports.reject=(req,res)=>{
+    Park.deleteOne({_id:req.params.id}).select().exec((err,user)=>{
+        
+        if(err) throw err;
+        else
+        res.json({sucsess:true,message:'profile deleted.'})
+       })
 
 }
 
@@ -287,4 +397,33 @@ module.exports.editPic=(req,res)=>{
             })
         }
     })
+}
+
+module.exports.savepassword=(req,res)=>{
+    Park.findOne({email:req.body.email}).select().exec((err,user)=>{
+        console.log(req.body.password)
+        if(err) throw err;
+        if(req.body.password==null||req.body.password==''){
+            res.json({sucsess:false,message:'Password not provided'});
+        }   
+        else{
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(req.body.password, salt, (err, hash) => {
+               
+                user.password=hash;
+                user.saltSecret=salt
+            user.temptoken='';
+            user.save((err)=>{
+                if(err){
+                    res.json({sucsess:false,message:err})
+                }
+                else{
+                    res.json({sucsess:true,message:'Password has been reset'});
+                }
+            })
+                });
+            });   
+        }
+    })
+
 }

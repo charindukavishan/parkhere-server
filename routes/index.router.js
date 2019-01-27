@@ -38,23 +38,30 @@ router.post('/web/authenticate', ctrlUser.authenticate);
 router.get('/web/userProfile',jwtHelper.verifyJwtToken, ctrlUser.userProfile);
 router.get('/web/userProfile/:id', ctrlUser.getowner);
 router.get('/web/getname/:email', ctrlUser.getname);
-router.get('/web/rstpw/:email',ctrlUser.puttoken);
-router.get('/web/resetpassword/:token', ctrlUser.rstpw);
-router.put('/web/savepassword',ctrlUser.savepassword);
+router.get('/web/rstpw/user/:email',ctrlUser.puttoken);
+router.get('/web/rstpw/keeper/:email',keeper.puttoken);
+router.get('/web/resetpassword/user/:token', ctrlUser.rstpw);
+router.get('/web/resetpassword/keeper/:token', keeper.rstpw);
+router.put('/web/savepassword/user',ctrlUser.savepassword);
+router.put('/web/savepassword/keeper',keeper.savepassword);
 router.post('/web/newPost', ctrlUser.newPost);
 router.get('/web/getPosts',ctrlUser.getPosts)
 router.put('/web/editpro/:id',ctrlUser.editpro);
 router.post('/updateprofilepic/:id',ctrlUser.editPic)
  
 router.post('/web/regkeeper/:id',keeper.pkregister);
+router.post('/web/editkeeper/:id',keeper.editkeeper);
 router.post('/web/keeper/authenticate', keeper.authenticate);
 router.get('/web/keeperProfile',jwtHelper.verifyJwtToken, keeper.keeperProfile);
 router.get('/web/getkeepers/:id', keeper.getkeepers);
 router.get('/web/setstate/:id/:state',keeper.setstate);
 router.get('/web/getnewkeepers',keeper.getnewkeepers);
 router.get('/web/acceptpark/:id',keeper.acceptpark)
+router.get('/web/reject/:id',keeper.reject)
 router.post('/updatekeeperpic/:id',keeper.editPic)
 router.get('/web/getkeeperprofile/:id', keeper.getkeeperprofile);
+router.get('/web/allkeepers',keeper.allkeepers)
+router.get('/web/reported',keeper.reported)
 
 router.get('/web/users', ctrlUser.users);
 router.get('/web/readmsg/:file',ctrlUser.readmsg);
@@ -66,6 +73,7 @@ router.get('/web/bookinghistory/:id',ctrlBook.bookinhistory)
 router.post('/web/setBook',ctrlBook.setBook)
 router.get('/web/deletebook/:bookId',ctrlBook.deleteBook)
 router.post('/web/sethistory',ctrlBook.sethistory)
+router.post('/web/releaseslot',ctrlBook.releaseslot)
 // router.post('/upload/:id',filecntrl.savefile);
 // router.get('/files/:id',filecntrl.files)
 // router.get('/file/:filename',filecntrl.file)

@@ -233,7 +233,7 @@ module.exports.puttoken=(req,res)=>{console.log(req)
                         from:'parkheresl@gmail.com',
                         to:user.email,
                         subject:user.firstName,
-                        text:'http://localhost:4200/newpassword/'+user.temptoken
+                        text:'http://localhost:4200/newpassword/'+user.temptoken+'/user'
                     };
                     transporter.sendMail(email, function(error, info){
                         if (error) {
@@ -264,7 +264,7 @@ module.exports.rstpw=(req,res)=>{
     })
 }
 
-module.exports.savepassword=(req,res)=>{console.log(req.body)
+module.exports.savepassword=(req,res)=>{
     User.findOne({email:req.body.email}).select().exec((err,user)=>{
         console.log(req.body.password)
         if(err) throw err;
