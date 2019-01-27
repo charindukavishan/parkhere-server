@@ -5,7 +5,7 @@ const nodemailer=require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-const Blog = require('../models/Post');
+
 const files=mongoose.model('files');
 const User = mongoose.model('webUser'); 
 // const User=require('../models/user.model');
